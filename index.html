@@ -66,26 +66,42 @@
       gap: 10px;
       margin-bottom: 18px;
     }
-    .logo-dot {
+    .action-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .globe-btn {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #b3d2ff 0%, #4b8eff 34%, #0f3f9f 80%);
+      border: 1px solid rgba(150, 186, 246, 0.45);
+      background: radial-gradient(circle at 30% 30%, #98d5ff 0%, #3d87ff 38%, #0e3d98 82%);
       box-shadow: 0 0 22px rgba(89, 151, 255, 0.45);
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      padding: 0;
     }
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .globe-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 26px rgba(107, 168, 255, 0.58);
     }
-    .chip {
+    .top-action {
       border: 1px solid rgba(128, 159, 219, 0.35);
       background: var(--chip);
       color: #d6e8ff;
-      padding: 6px 10px;
+      padding: 8px 14px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 13px;
+      font-weight: 700;
       letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .top-action:hover {
+      transform: translateY(-1px);
+      border-color: rgba(176, 206, 255, 0.72);
     }
     .neon-title {
       margin: 0 0 8px;
@@ -107,14 +123,37 @@
         0 0 8px hsla(var(--h), 100%, 70%, 0.65),
         0 0 14px hsla(var(--h), 100%, 62%, 0.4);
       animation:
+        neonBoot 2.8s ease-out both,
         neonFlicker 4.4s linear infinite,
         breathing 2.6s ease-in-out infinite;
-      animation-delay: var(--d, 0ms);
+      animation-delay: var(--d, 0ms), calc(var(--d, 0ms) + 420ms), calc(var(--d, 0ms) + 420ms);
       transform-origin: 50% 55%;
     }
     .neon-space {
       width: 0.5ch;
       display: inline-block;
+    }
+    @keyframes neonBoot {
+      0% {
+        opacity: 0.22;
+        filter: brightness(0.22) saturate(0.65);
+        text-shadow:
+          0 0 0 hsla(var(--h), 100%, 72%, 0),
+          0 0 0 hsla(var(--h), 100%, 65%, 0),
+          0 0 0 hsla(var(--h), 100%, 60%, 0);
+      }
+      55% {
+        opacity: 0.64;
+        filter: brightness(0.62) saturate(0.9);
+      }
+      100% {
+        opacity: 1;
+        filter: brightness(1) saturate(1);
+        text-shadow:
+          0 0 2px hsla(var(--h), 100%, 85%, 0.95),
+          0 0 8px hsla(var(--h), 100%, 70%, 0.65),
+          0 0 14px hsla(var(--h), 100%, 62%, 0.4);
+      }
     }
     @keyframes neonFlicker {
       0%, 100% { opacity: 1; filter: brightness(1); }
@@ -181,48 +220,62 @@
     }
     .reason-layout {
       display: grid;
-      grid-template-columns: 1fr 220px;
-      gap: 14px;
-      align-items: stretch;
+      grid-template-columns: 1fr 230px;
+      gap: 12px;
+      align-items: start;
     }
-    .logo-rail {
+    .link-rail {
       border: 1px solid rgba(131, 164, 226, 0.28);
       border-radius: 14px;
       background: rgba(10, 20, 47, 0.85);
       padding: 10px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+      flex-direction: column;
       gap: 8px;
-      align-content: start;
     }
-    .logo-link {
-      border: 1px solid rgba(123, 157, 217, 0.28);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.96);
-      min-height: 58px;
-      display: grid;
-      place-items: center;
-      text-decoration: none;
-      overflow: hidden;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-    }
-    .logo-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(47, 120, 255, 0.26);
-    }
-    .logo-link img {
-      width: 70%;
-      max-height: 34px;
-      object-fit: contain;
+    .home-btn {
       display: block;
-    }
-    .logo-fallback {
-      font-size: 11px;
+      border-radius: 10px;
+      border: 1px solid rgba(131, 167, 229, 0.35);
+      background: rgba(13, 30, 67, 0.95);
+      color: #d8e9ff;
+      text-decoration: none;
+      font-size: 12px;
       font-weight: 700;
-      color: #264780;
-      padding: 0 6px;
+      padding: 10px 8px;
       text-align: center;
       line-height: 1.2;
+      transition: transform 0.16s ease, border-color 0.16s ease;
+    }
+    .home-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(168, 200, 255, 0.7);
+    }
+    .reason-yellow {
+      color: #ffe76a;
+      font-weight: 900;
+    }
+    .political-hint {
+      display: none;
+      margin: 10px 0 12px;
+      border: 1px solid rgba(139, 173, 235, 0.34);
+      border-radius: 12px;
+      background: rgba(10, 22, 54, 0.86);
+      padding: 10px;
+      align-items: center;
+      gap: 10px;
+    }
+    .political-hint img {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid rgba(156, 189, 244, 0.5);
+    }
+    .political-hint .hint-text {
+      font-size: 13px;
+      line-height: 1.45;
+      color: #d9e9ff;
     }
     ul {
       margin: 10px 0 0;
@@ -252,11 +305,36 @@
       font-size: 12px;
       color: #8ea7d1;
     }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%);
+      background: rgba(8, 24, 56, 0.95);
+      border: 1px solid rgba(141, 178, 239, 0.45);
+      color: #e4f0ff;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      z-index: 50;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast.hide {
+      opacity: 0;
+      transform: translateX(-50%) translateY(8px);
+    }
     @media (max-width: 740px) {
       .card { padding: 18px; }
-      .topbar { align-items: flex-start; flex-direction: column; }
+      .topbar { align-items: flex-start; flex-wrap: wrap; }
+      .action-group { justify-content: flex-start; }
       .reason-layout { grid-template-columns: 1fr; }
-      .logo-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
   </style>
 </head>
@@ -264,16 +342,15 @@
   <main class="wrap">
     <section class="card">
       <div class="topbar">
-        <div class="logo-dot" aria-hidden="true"></div>
-        <div class="chips" aria-hidden="true">
-          <span class="chip">For You</span>
-          <span class="chip">Markets</span>
-          <span class="chip">Global Picks</span>
-          <span class="chip">Watchlist</span>
+        <button id="globeBtn" class="globe-btn" type="button" aria-label="새로고침"></button>
+        <div class="action-group">
+          <button id="shareBtn" class="top-action" type="button">내보내기</button>
+          <button id="printBtn" class="top-action" type="button">인쇄</button>
+          <button id="downloadBtn" class="top-action" type="button">다운로드</button>
         </div>
       </div>
       <h1 id="neonTitle" class="neon-title" aria-label="내 지갑을 풍족하게, 공무원 주식 추천"></h1>
-      <p class="desc">Yahoo Finance 뉴스를 바탕으로 테마와 국가를 분산해 종목 1개를 추천합니다. 추천 사유는 500자 이내로 출력됩니다.</p>
+      <p class="desc">Yahoo Finance 뉴스를 바탕으로 테마와 국가를 분산해 종목 1개를 추천합니다. 추천 사유는 1000자 이내로 출력됩니다.</p>
       <div class="row">
         <button id="runBtn">뉴스 분석 후 추천하기</button>
       </div>
@@ -284,7 +361,11 @@
         <div id="stock" class="kpi"></div>
         <div class="reason-layout">
           <div id="reason" class="reason"></div>
-          <div id="logos" class="logo-rail" aria-label="테마 종목 로고"></div>
+          <div id="homeLinks" class="link-rail" aria-label="회사 홈페이지 링크"></div>
+        </div>
+        <div id="politicalHint" class="political-hint" aria-live="polite">
+          <img id="politicalHintImg" alt="정치인 힌트 이미지">
+          <div id="politicalHintText" class="hint-text"></div>
         </div>
         <strong>관련 기사 링크</strong>
         <ul id="links"></ul>
@@ -292,7 +373,10 @@
       <div class="foot">참고: Yahoo RSS를 우선 사용하며, 소스가 차단되면 백업 소스로 자동 전환합니다.</div>
     </section>
   </main>
+  <div id="toast" class="toast" role="status" aria-live="polite">주소가 복사되었습니다.</div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     const THEMES = {
       "AI/반도체": {
@@ -342,17 +426,36 @@
           { name: "BAE Systems", ticker: "BA.L", country: "영국", home: "https://www.baesystems.com/", logoDomain: "baesystems.com", why: "유럽 안보 강화 국면에서 방산 수요 증가의 수혜 가능성이 높습니다." },
           { name: "한화에어로스페이스", ticker: "012450.KS", country: "한국", home: "https://www.hanwhaaerospace.co.kr/", logoDomain: "hanwhaaerospace.co.kr", why: "방산 수출 확대와 생산능력 증대가 중기 성장 모멘텀입니다." }
         ]
+      },
+      "정치인 테마주(유머)": {
+        keywords: ["election", "president", "poll", "campaign", "parliament", "congress", "primary", "ballot"],
+        stocks: [
+          { name: "덕성", ticker: "004830.KS", country: "한국", home: "http://www.duck-sung.co.kr/", why: "정치 뉴스 급증 구간에서 단기 수급이 몰리는 대표 테마주로 자주 거론됩니다.", politicianHint: "윤석열", politicianImage: "https://upload.wikimedia.org/wikipedia/commons/8/87/Official_portrait_of_President_Yoon_Suk_yeol_2022.jpg" },
+          { name: "이화공영", ticker: "001840.KQ", country: "한국", home: "http://www.ewha.co.kr/", why: "선거 시즌마다 키워드 연동으로 거래대금이 확대되는 경향이 반복됩니다.", politicianHint: "이재명", politicianImage: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Lee_Jae-myung_2022.jpg" },
+          { name: "대상홀딩스", ticker: "084690.KS", country: "한국", home: "https://www.daesangholdings.com/", why: "정치 이슈 연결 루머가 유입될 때 단기 변동성이 급격히 커지는 편입니다.", politicianHint: "한동훈", politicianImage: "https://upload.wikimedia.org/wikipedia/commons/7/7d/Han_Dong-hoon_2022.jpg" }
+        ]
       }
     };
 
     const runBtn = document.getElementById("runBtn");
+    const globeBtn = document.getElementById("globeBtn");
+    const shareBtn = document.getElementById("shareBtn");
+    const printBtn = document.getElementById("printBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const toastEl = document.getElementById("toast");
     const statusEl = document.getElementById("status");
     const resultEl = document.getElementById("result");
     const themeEl = document.getElementById("theme");
     const stockEl = document.getElementById("stock");
     const reasonEl = document.getElementById("reason");
-    const logosEl = document.getElementById("logos");
+    const homeLinksEl = document.getElementById("homeLinks");
+    const politicalHintEl = document.getElementById("politicalHint");
+    const politicalHintImgEl = document.getElementById("politicalHintImg");
+    const politicalHintTextEl = document.getElementById("politicalHintText");
     const linksEl = document.getElementById("links");
+    const FUN_THEME = "정치인 테마주(유머)";
+    let progressTimer = null;
+    let progressFrame = 0;
     let lastStockCode = null;
     let lastThemeName = null;
     let lastCountry = null;
@@ -363,6 +466,34 @@
 
     function setStatus(msg) {
       statusEl.textContent = msg;
+    }
+
+    function startProgressStatus(base) {
+      stopProgressStatus();
+      const dots = [".", "..", "..."];
+      progressFrame = 0;
+      setStatus(`${base}${dots[progressFrame]}`);
+      progressTimer = setInterval(() => {
+        progressFrame = (progressFrame + 1) % dots.length;
+        setStatus(`${base}${dots[progressFrame]}`);
+      }, 420);
+    }
+
+    function stopProgressStatus() {
+      if (progressTimer) {
+        clearInterval(progressTimer);
+        progressTimer = null;
+      }
+    }
+
+    function showToast(message) {
+      toastEl.textContent = message;
+      toastEl.classList.remove("hide");
+      toastEl.classList.add("show");
+      setTimeout(() => {
+        toastEl.classList.remove("show");
+        toastEl.classList.add("hide");
+      }, 2000);
     }
 
     function normalize(text) {
@@ -407,12 +538,17 @@
       const entries = Object.entries(scores);
       const positive = entries.filter(([, score]) => score > 0);
       const ranked = (positive.length ? positive : entries).sort((a, b) => b[1] - a[1]);
-      const top = ranked.slice(0, Math.min(4, ranked.length));
+      const top = ranked.slice(0, Math.min(6, ranked.length));
 
       const preferred = top
         .filter(([theme]) => theme !== lastThemeName)
         .filter(([theme]) => !recentThemes.includes(theme));
       const pool = preferred.length ? preferred : top;
+
+      // 전체가 한 테마로 쏠리지 않게, 가끔은 유머 테마도 의도적으로 탐색
+      if (THEMES[FUN_THEME] && Math.random() < 0.12 && lastThemeName !== FUN_THEME) {
+        return FUN_THEME;
+      }
 
       const weighted = pool.map(([theme, score], idx) => ({
         value: theme,
@@ -546,47 +682,70 @@
 
     function buildReason(theme, stock, hitKeywords, articleCount) {
       const topKeywords = uniq(hitKeywords).slice(0, 5).join(", ") || "관련 키워드";
+      const tail = theme === FUN_THEME
+        ? "이 구간에서는 재미 포인트와 단기 이슈 반응성을 중심으로 과감하게 픽했습니다."
+        : "지금 구간에서 강하게 우선순위 추천 후보로 제시합니다.";
+      const detail =
+        "이번 추천은 기사 제목 기반 키워드 적합도, 최근 추천 이력(테마/국가/종목) 분산 규칙, " +
+        "그리고 현재 뉴스 모멘텀 강도를 함께 반영했습니다. " +
+        "동일 테마 과집중을 줄이기 위해 상위 점수 테마 내 가중 선택을 적용했고, " +
+        "국가 분산을 위해 직전 추천 국가와 최근 추천 국가를 회피하는 로직을 사용했습니다.";
       const base =
         `Yahoo Finance 메인 뉴스에서 '${theme}' 관련 신호가 확인되었습니다. ` +
         `주요 키워드는 ${topKeywords}이며, 관련 기사 ${articleCount}건을 근거로 ` +
         `${stock.name}(${stock.ticker}, ${stock.country})를 추천합니다. ${stock.why} ` +
-        `지금 구간에서 우선순위 추천 후보로 제시합니다.`;
-      return base.length > 500 ? base.slice(0, 500) : base;
+        `${detail} ${tail}`;
+      return base.length > 1000 ? base.slice(0, 1000) : base;
     }
 
-    function renderLogos(theme) {
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function renderHomeLinks(theme) {
       const stocks = (THEMES[theme] && THEMES[theme].stocks) || [];
-      logosEl.innerHTML = "";
+      homeLinksEl.innerHTML = "";
       stocks.forEach((s) => {
         const a = document.createElement("a");
-        a.className = "logo-link";
+        a.className = "home-btn";
         a.href = s.home || "#";
         a.target = "_blank";
         a.rel = "noopener noreferrer";
-        a.title = `${s.name} 공식 홈페이지`;
-
-        const img = document.createElement("img");
-        img.alt = `${s.name} 로고`;
-        img.src = `https://logo.clearbit.com/${encodeURIComponent(s.logoDomain || "")}`;
-        img.loading = "lazy";
-        img.onerror = () => {
-          img.remove();
-          const fb = document.createElement("span");
-          fb.className = "logo-fallback";
-          fb.textContent = s.name;
-          a.appendChild(fb);
-        };
-
-        a.appendChild(img);
-        logosEl.appendChild(a);
+        a.textContent = `${s.name} 홈페이지`;
+        homeLinksEl.appendChild(a);
       });
+    }
+
+    function renderPoliticalHint(theme, stock) {
+      if (theme !== FUN_THEME || !stock.politicianHint) {
+        politicalHintEl.style.display = "none";
+        politicalHintImgEl.removeAttribute("src");
+        politicalHintTextEl.textContent = "";
+        return;
+      }
+      politicalHintImgEl.onerror = () => {
+        politicalHintImgEl.style.display = "none";
+      };
+      politicalHintImgEl.style.display = "block";
+      politicalHintImgEl.src = stock.politicianImage || "";
+      politicalHintTextEl.textContent = `정치인 테마주 힌트: ${stock.politicianHint} 관련 테마로 시장에서 자주 언급됩니다.`;
+      politicalHintEl.style.display = "flex";
     }
 
     function renderResult(theme, stock, reason, links) {
       themeEl.textContent = `테마: ${theme}`;
       stockEl.textContent = `추천 종목: ${stock.name} (${stock.ticker}, ${stock.country})`;
-      reasonEl.textContent = `추천 사유(500자 이내): ${reason}`;
-      renderLogos(theme);
+      const yellowTail = theme === FUN_THEME
+        ? ` <span class="reason-yellow">웃자고 하는 거니 죽자고 매수 버튼으로 달려들진 마세요</span>`
+        : "";
+      reasonEl.innerHTML = `추천 사유(1000자 이내): ${escapeHtml(reason)}${yellowTail}`;
+      renderHomeLinks(theme);
+      renderPoliticalHint(theme, stock);
       linksEl.innerHTML = "";
       links.forEach((a) => {
         const li = document.createElement("li");
@@ -610,7 +769,7 @@
         if (!articles.length) {
           throw new Error("메인 뉴스에서 분석 가능한 기사 링크를 찾지 못했습니다.");
         }
-        setStatus(`기사 ${articles.length}건 수집 완료(${usedSource}). 테마 분석 중...`);
+        startProgressStatus(`기사 ${articles.length}건 수집 완료(${usedSource}). 테마 분석 중`);
 
         const { scores, hits, hitKeywords } = scoreThemes(articles);
         const pickedTheme = chooseTheme(scores);
@@ -621,12 +780,15 @@
         const related = ((hits[pickedTheme] || []).length ? hits[pickedTheme] : articles).slice(0, 3);
         const reason = buildReason(pickedTheme, stock, hitKeywords[pickedTheme] || [], related.length);
 
+        stopProgressStatus();
         renderResult(pickedTheme, stock, reason, related);
         rememberStock(stock, pickedTheme);
         setStatus("추천 완료");
       } catch (err) {
+        stopProgressStatus();
         setStatus(`실패: ${err.message}`);
       } finally {
+        stopProgressStatus();
         runBtn.disabled = false;
       }
     }
@@ -652,7 +814,68 @@
       });
     }
 
+    async function copyCurrentUrl() {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+      } catch (e) {
+        const temp = document.createElement("textarea");
+        temp.value = window.location.href;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+      }
+      showToast("주소가 복사되었습니다.");
+    }
+
+    function printPage() {
+      window.print();
+    }
+
+    async function downloadPdf() {
+      try {
+        if (!window.html2canvas || !window.jspdf || !window.jspdf.jsPDF) {
+          showToast("PDF 라이브러리 로드 실패: 인쇄를 이용해 주세요.");
+          return;
+        }
+        const canvas = await window.html2canvas(document.body, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#030712"
+        });
+        const imgData = canvas.toDataURL("image/jpeg", 0.95);
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+        const imgW = pageW;
+        const imgH = (canvas.height * imgW) / canvas.width;
+
+        let heightLeft = imgH;
+        let y = 0;
+        pdf.addImage(imgData, "JPEG", 0, y, imgW, imgH);
+        heightLeft -= pageH;
+
+        while (heightLeft > 0) {
+          y = heightLeft - imgH;
+          pdf.addPage();
+          pdf.addImage(imgData, "JPEG", 0, y, imgW, imgH);
+          heightLeft -= pageH;
+        }
+        pdf.save("stock-recommendation.pdf");
+        showToast("PDF 다운로드가 시작되었습니다.");
+      } catch (e) {
+        showToast("PDF 생성에 실패했습니다. 인쇄를 이용해 주세요.");
+      }
+    }
+
     renderNeonTitle("내 지갑을 풍족하게, 공무원 주식 추천");
+    globeBtn.addEventListener("click", () => {
+      window.location.reload();
+    });
+    shareBtn.addEventListener("click", copyCurrentUrl);
+    printBtn.addEventListener("click", printPage);
+    downloadBtn.addEventListener("click", downloadPdf);
     runBtn.addEventListener("click", run);
   </script>
 </body>
