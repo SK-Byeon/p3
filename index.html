@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>내 지갑을 풍족하게, 공무원 주식 추천</title>
+  <style>
+    :root {
+      --bg-0: #030712;
+      --bg-1: #081a3f;
+      --bg-2: #0b2b66;
+      --card: rgba(6, 14, 36, 0.82);
+      --ink: #eaf3ff;
+      --sub: #9fb6dc;
+      --line: rgba(131, 160, 214, 0.28);
+      --accent: #2d7dff;
+      --accent-2: #5ba9ff;
+      --chip: rgba(19, 37, 78, 0.86);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "SUIT Variable", "Pretendard", "Noto Sans KR", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 400px at 12% -10%, rgba(62, 120, 255, 0.45) 0%, transparent 60%),
+        radial-gradient(700px 340px at 88% 0%, rgba(50, 97, 214, 0.35) 0%, transparent 58%),
+        linear-gradient(170deg, var(--bg-2) 0%, var(--bg-1) 36%, var(--bg-0) 85%);
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 1080px;
+      margin: 28px auto 42px;
+      padding: 0 18px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow:
+        0 14px 36px rgba(2, 8, 24, 0.55),
+        inset 0 1px 0 rgba(196, 218, 255, 0.08);
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      pointer-events: none;
+      background:
+        radial-gradient(500px 120px at 30% -5%, rgba(88, 152, 255, 0.22), transparent 68%),
+        radial-gradient(520px 130px at 85% -10%, rgba(72, 121, 223, 0.2), transparent 72%);
+      z-index: 0;
+    }
+    .card > * {
+      position: relative;
+      z-index: 1;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .logo-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #b3d2ff 0%, #4b8eff 34%, #0f3f9f 80%);
+      box-shadow: 0 0 22px rgba(89, 151, 255, 0.45);
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      border: 1px solid rgba(128, 159, 219, 0.35);
+      background: var(--chip);
+      color: #d6e8ff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+    }
+    .neon-title {
+      margin: 0 0 8px;
+      line-height: 1.25;
+      font-size: clamp(24px, 4.4vw, 40px);
+      letter-spacing: 0.01em;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1px;
+    }
+    .neon-char {
+      display: inline-block;
+      font-weight: 900;
+      color: hsl(var(--h), 100%, 88%);
+      -webkit-text-stroke: 0.4px rgba(9, 27, 58, 0.55);
+      text-shadow:
+        0 0 2px hsla(var(--h), 100%, 85%, 0.95),
+        0 0 8px hsla(var(--h), 100%, 70%, 0.65),
+        0 0 14px hsla(var(--h), 100%, 62%, 0.4);
+      animation:
+        neonFlicker 4.4s linear infinite,
+        breathing 2.6s ease-in-out infinite;
+      animation-delay: var(--d, 0ms);
+      transform-origin: 50% 55%;
+    }
+    .neon-space {
+      width: 0.5ch;
+      display: inline-block;
+    }
+    @keyframes neonFlicker {
+      0%, 100% { opacity: 1; filter: brightness(1); }
+      8% { opacity: 0.88; filter: brightness(1.08); }
+      14% { opacity: 1; filter: brightness(1); }
+      29% { opacity: 0.9; filter: brightness(1.06); }
+      46% { opacity: 1; filter: brightness(1); }
+      72% { opacity: 0.89; filter: brightness(1.08); }
+      86% { opacity: 1; filter: brightness(1.01); }
+    }
+    @keyframes breathing {
+      0%, 100% { transform: scale(0.98); }
+      50% { transform: scale(1.04); }
+    }
+    .desc {
+      margin: 0 0 16px;
+      color: var(--sub);
+      font-size: 14px;
+      max-width: 840px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    button {
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #256dff, #58a6ff);
+      color: #fff;
+      font-weight: 700;
+      padding: 12px 20px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(49, 120, 255, 0.36);
+    }
+    button:disabled { opacity: 0.65; cursor: not-allowed; }
+    .status {
+      min-height: 20px;
+      color: #b5caf0;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .result {
+      display: none;
+      margin-top: 14px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(128, 160, 218, 0.28);
+    }
+    .kpi {
+      margin: 6px 0;
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .reason {
+      background: rgba(9, 22, 54, 0.82);
+      border: 1px solid rgba(131, 164, 226, 0.28);
+      border-radius: 14px;
+      padding: 14px;
+      line-height: 1.5;
+      margin: 10px 0;
+      font-size: 14px;
+      color: #e5f0ff;
+    }
+    .reason-layout {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 14px;
+      align-items: stretch;
+    }
+    .logo-rail {
+      border: 1px solid rgba(131, 164, 226, 0.28);
+      border-radius: 14px;
+      background: rgba(10, 20, 47, 0.85);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      align-content: start;
+    }
+    .logo-link {
+      border: 1px solid rgba(123, 157, 217, 0.28);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.96);
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      text-decoration: none;
+      overflow: hidden;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .logo-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(47, 120, 255, 0.26);
+    }
+    .logo-link img {
+      width: 70%;
+      max-height: 34px;
+      object-fit: contain;
+      display: block;
+    }
+    .logo-fallback {
+      font-size: 11px;
+      font-weight: 700;
+      color: #264780;
+      padding: 0 6px;
+      text-align: center;
+      line-height: 1.2;
+    }
+    ul {
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+    li {
+      margin: 0;
+      border: 1px solid rgba(128, 160, 220, 0.24);
+      background: linear-gradient(165deg, rgba(16, 34, 75, 0.95), rgba(8, 18, 41, 0.95));
+      border-radius: 12px;
+      padding: 12px;
+      min-height: 86px;
+      transition: transform 0.22s ease, border-color 0.22s ease;
+    }
+    li:hover {
+      transform: translateY(-3px);
+      border-color: rgba(146, 182, 247, 0.54);
+    }
+    a { color: #d9e9ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .foot {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #8ea7d1;
+    }
+    @media (max-width: 740px) {
+      .card { padding: 18px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .reason-layout { grid-template-columns: 1fr; }
+      .logo-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <div class="topbar">
+        <div class="logo-dot" aria-hidden="true"></div>
+        <div class="chips" aria-hidden="true">
+          <span class="chip">For You</span>
+          <span class="chip">Markets</span>
+          <span class="chip">Global Picks</span>
+          <span class="chip">Watchlist</span>
+        </div>
+      </div>
+      <h1 id="neonTitle" class="neon-title" aria-label="내 지갑을 풍족하게, 공무원 주식 추천"></h1>
+      <p class="desc">Yahoo Finance 뉴스를 바탕으로 테마와 국가를 분산해 종목 1개를 추천합니다. 추천 사유는 500자 이내로 출력됩니다.</p>
+      <div class="row">
+        <button id="runBtn">뉴스 분석 후 추천하기</button>
+      </div>
+      <div id="status" class="status"></div>
+
+      <div id="result" class="result">
+        <div id="theme" class="kpi"></div>
+        <div id="stock" class="kpi"></div>
+        <div class="reason-layout">
+          <div id="reason" class="reason"></div>
+          <div id="logos" class="logo-rail" aria-label="테마 종목 로고"></div>
+        </div>
+        <strong>관련 기사 링크</strong>
+        <ul id="links"></ul>
+      </div>
+      <div class="foot">참고: Yahoo RSS를 우선 사용하며, 소스가 차단되면 백업 소스로 자동 전환합니다.</div>
+    </section>
+  </main>
+
+  <script>
+    const THEMES = {
+      "AI/반도체": {
+        keywords: ["ai", "semiconductor", "chip", "gpu", "server", "data center", "hbm", "nvidia"],
+        stocks: [
+          { name: "NVIDIA", ticker: "NVDA", country: "미국", home: "https://www.nvidia.com/", logoDomain: "nvidia.com", why: "AI 서버 투자 확대와 고성능 GPU 수요의 직접 수혜가 기대됩니다." },
+          { name: "TSMC", ticker: "TSM", country: "대만", home: "https://www.tsmc.com/", logoDomain: "tsmc.com", why: "첨단 공정 점유율 우위로 AI 칩 생산 확대의 중심에 있습니다." },
+          { name: "SK하이닉스", ticker: "000660.KS", country: "한국", home: "https://www.skhynix.com/", logoDomain: "skhynix.com", why: "HBM 중심 메모리 믹스 개선이 실적 탄력으로 연결될 수 있습니다." }
+        ]
+      },
+      "친환경/전기차": {
+        keywords: ["ev", "electric vehicle", "battery", "lithium", "charging", "tesla", "renewable"],
+        stocks: [
+          { name: "Tesla", ticker: "TSLA", country: "미국", home: "https://www.tesla.com/", logoDomain: "tesla.com", why: "전기차 가격 전략과 에너지 저장 사업 확장이 동시 모멘텀입니다." },
+          { name: "BYD", ticker: "1211.HK", country: "중국", home: "https://www.byd.com/", logoDomain: "byd.com", why: "내수·수출 동시 확대로 전기차 판매 성장 지속 가능성이 큽니다." },
+          { name: "LG에너지솔루션", ticker: "373220.KS", country: "한국", home: "https://www.lgensol.com/", logoDomain: "lgensol.com", why: "글로벌 완성차향 배터리 공급 계약이 장기 성장 가시성을 높입니다." }
+        ]
+      },
+      "금리/금융": {
+        keywords: ["fed", "rate cut", "rate hike", "inflation", "bond yield", "bank", "treasury"],
+        stocks: [
+          { name: "JPMorgan Chase", ticker: "JPM", country: "미국", home: "https://www.jpmorganchase.com/", logoDomain: "jpmorganchase.com", why: "금리 변동 국면에서 순이자마진과 자본비율 경쟁력이 부각될 수 있습니다." },
+          { name: "HSBC", ticker: "HSBA.L", country: "영국", home: "https://www.hsbc.com/", logoDomain: "hsbc.com", why: "글로벌 금리·환율 변화에 민감한 국제 금융 포지션이 강점입니다." },
+          { name: "미쓰비시 UFJ", ticker: "8306.T", country: "일본", home: "https://www.mufg.jp/english/", logoDomain: "mufg.jp", why: "일본 금리 정상화 흐름에서 은행주 재평가 여지가 있습니다." }
+        ]
+      },
+      "에너지/원자재": {
+        keywords: ["oil", "crude", "opec", "gas", "lng", "commodity", "copper", "uranium"],
+        stocks: [
+          { name: "Exxon Mobil", ticker: "XOM", country: "미국", home: "https://corporate.exxonmobil.com/", logoDomain: "exxonmobil.com", why: "유가 변동 구간에서도 상류·하류 포트폴리오 균형이 강점입니다." },
+          { name: "Shell", ticker: "SHEL", country: "영국", home: "https://www.shell.com/", logoDomain: "shell.com", why: "LNG 트레이딩과 배당 정책의 조합이 방어력을 높일 수 있습니다." },
+          { name: "BHP", ticker: "BHP", country: "호주", home: "https://www.bhp.com/", logoDomain: "bhp.com", why: "구리·철광석 중심 원자재 사이클 반등 시 레버리지 효과가 큽니다." }
+        ]
+      },
+      "헬스케어/바이오": {
+        keywords: ["drug", "fda", "clinical", "biotech", "pharma", "vaccine", "obesity", "healthcare"],
+        stocks: [
+          { name: "Eli Lilly", ticker: "LLY", country: "미국", home: "https://www.lilly.com/", logoDomain: "lilly.com", why: "신약 파이프라인 성과가 이익 성장의 핵심 동력으로 작동하고 있습니다." },
+          { name: "Novo Nordisk", ticker: "NVO", country: "덴마크", home: "https://www.novonordisk.com/", logoDomain: "novonordisk.com", why: "글로벌 비만·당뇨 치료제 수요 확대의 구조적 수혜가 가능합니다." },
+          { name: "Roche", ticker: "ROG.SW", country: "스위스", home: "https://www.roche.com/", logoDomain: "roche.com", why: "진단·제약 포트폴리오 분산으로 방어적 성격이 상대적으로 강합니다." }
+        ]
+      },
+      "방산/우주": {
+        keywords: ["defense", "military", "missile", "security", "nato", "space", "satellite", "war"],
+        stocks: [
+          { name: "Lockheed Martin", ticker: "LMT", country: "미국", home: "https://www.lockheedmartin.com/", logoDomain: "lockheedmartin.com", why: "국방 예산 확대 시 장기 수주잔고 기반의 실적 안정성이 큽니다." },
+          { name: "BAE Systems", ticker: "BA.L", country: "영국", home: "https://www.baesystems.com/", logoDomain: "baesystems.com", why: "유럽 안보 강화 국면에서 방산 수요 증가의 수혜 가능성이 높습니다." },
+          { name: "한화에어로스페이스", ticker: "012450.KS", country: "한국", home: "https://www.hanwhaaerospace.co.kr/", logoDomain: "hanwhaaerospace.co.kr", why: "방산 수출 확대와 생산능력 증대가 중기 성장 모멘텀입니다." }
+        ]
+      }
+    };
+
+    const runBtn = document.getElementById("runBtn");
+    const statusEl = document.getElementById("status");
+    const resultEl = document.getElementById("result");
+    const themeEl = document.getElementById("theme");
+    const stockEl = document.getElementById("stock");
+    const reasonEl = document.getElementById("reason");
+    const logosEl = document.getElementById("logos");
+    const linksEl = document.getElementById("links");
+    let lastStockCode = null;
+    let lastThemeName = null;
+    let lastCountry = null;
+    const recentStockCodes = [];
+    const recentThemes = [];
+    const recentCountries = [];
+    const RECENT_WINDOW = 6;
+
+    function setStatus(msg) {
+      statusEl.textContent = msg;
+    }
+
+    function normalize(text) {
+      return (text || "").replace(/\s+/g, " ").trim().toLowerCase();
+    }
+
+    function uniq(arr) {
+      return [...new Set(arr)];
+    }
+
+    function rememberStock(stock, themeName) {
+      const code = stock && stock.ticker;
+      if (!code) return;
+      recentStockCodes.push(code);
+      if (recentStockCodes.length > RECENT_WINDOW) {
+        recentStockCodes.shift();
+      }
+      lastStockCode = code;
+      if (themeName) {
+        recentThemes.push(themeName);
+        if (recentThemes.length > RECENT_WINDOW) recentThemes.shift();
+        lastThemeName = themeName;
+      }
+      if (stock.country) {
+        recentCountries.push(stock.country);
+        if (recentCountries.length > RECENT_WINDOW) recentCountries.shift();
+        lastCountry = stock.country;
+      }
+    }
+
+    function weightedPick(items) {
+      const total = items.reduce((sum, it) => sum + it.weight, 0);
+      let r = Math.random() * total;
+      for (const it of items) {
+        r -= it.weight;
+        if (r <= 0) return it.value;
+      }
+      return items[items.length - 1].value;
+    }
+
+    function chooseTheme(scores) {
+      const entries = Object.entries(scores);
+      const positive = entries.filter(([, score]) => score > 0);
+      const ranked = (positive.length ? positive : entries).sort((a, b) => b[1] - a[1]);
+      const top = ranked.slice(0, Math.min(4, ranked.length));
+
+      const preferred = top
+        .filter(([theme]) => theme !== lastThemeName)
+        .filter(([theme]) => !recentThemes.includes(theme));
+      const pool = preferred.length ? preferred : top;
+
+      const weighted = pool.map(([theme, score], idx) => ({
+        value: theme,
+        weight: (score + 1) + (pool.length - idx) * 0.35
+      }));
+      return weightedPick(weighted);
+    }
+
+    function pickFreshStock(themeName) {
+      const stocks = (THEMES[themeName] && THEMES[themeName].stocks) || [];
+      if (!stocks.length) return null;
+
+      const byNotLast = stocks.filter((s) => s.ticker !== lastStockCode);
+      const byNotRecentStock = byNotLast.filter((s) => !recentStockCodes.includes(s.ticker));
+      const byCountry = byNotRecentStock.filter((s) => s.country !== lastCountry && !recentCountries.includes(s.country));
+      const pool = byCountry.length ? byCountry : (byNotRecentStock.length ? byNotRecentStock : (byNotLast.length ? byNotLast : stocks));
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    const YAHOO_RSS_FEEDS = [
+      "https://feeds.finance.yahoo.com/rss/2.0/headline?s=^GSPC&region=US&lang=en-US",
+      "https://feeds.finance.yahoo.com/rss/2.0/headline?s=^IXIC&region=US&lang=en-US",
+      "https://feeds.finance.yahoo.com/rss/2.0/headline?s=BTC-USD&region=US&lang=en-US"
+    ];
+
+    function normalizeYahooLink(url) {
+      if (!url) return "";
+      return url.replace(/^http:\/\//i, "https://");
+    }
+
+    function keepYahooNewsOnly(items) {
+      const seen = new Set();
+      const out = [];
+      for (const it of items) {
+        const title = (it.title || "").trim();
+        const url = normalizeYahooLink((it.url || it.link || "").trim());
+        if (!title || !url) continue;
+        if (!url.includes("finance.yahoo.com/")) continue;
+        const key = `${title}|${url}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push({ title, url });
+      }
+      return out.slice(0, 50);
+    }
+
+    async function fetchViaRss2Json(feedUrl) {
+      const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
+      const res = await fetch(api, { method: "GET" });
+      if (!res.ok) throw new Error(`rss2json 오류: ${res.status}`);
+      const data = await res.json();
+      const items = Array.isArray(data.items) ? data.items : [];
+      return items.map((x) => ({ title: x.title, url: x.link }));
+    }
+
+    function parseRssXml(xmlText) {
+      const doc = new DOMParser().parseFromString(xmlText, "text/xml");
+      const nodes = [...doc.querySelectorAll("item")];
+      return nodes.map((n) => ({
+        title: (n.querySelector("title")?.textContent || "").trim(),
+        url: (n.querySelector("link")?.textContent || "").trim()
+      }));
+    }
+
+    async function fetchViaAllOrigins(feedUrl) {
+      const api = `https://api.allorigins.win/raw?url=${encodeURIComponent(feedUrl)}`;
+      const res = await fetch(api, { method: "GET" });
+      if (!res.ok) throw new Error(`allorigins 오류: ${res.status}`);
+      const text = await res.text();
+      return parseRssXml(text);
+    }
+
+    async function fetchMainNewsArticles() {
+      const aggregated = [];
+      let usedSource = "";
+
+      for (const feed of YAHOO_RSS_FEEDS) {
+        try {
+          const items = await fetchViaRss2Json(feed);
+          aggregated.push(...items);
+          usedSource = "rss2json";
+        } catch (e) {
+          // 다음 소스로 fallback
+        }
+      }
+
+      if (!aggregated.length) {
+        for (const feed of YAHOO_RSS_FEEDS) {
+          try {
+            const items = await fetchViaAllOrigins(feed);
+            aggregated.push(...items);
+            usedSource = "allorigins";
+          } catch (e) {
+            // 다음 소스로 fallback
+          }
+        }
+      }
+
+      const articles = keepYahooNewsOnly(aggregated);
+      if (!articles.length) {
+        throw new Error("뉴스 소스 접근에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+      }
+      return { articles, usedSource };
+    }
+
+    function scoreThemes(articles) {
+      const scores = {};
+      const hits = {};
+      const hitKeywords = {};
+
+      for (const theme of Object.keys(THEMES)) {
+        scores[theme] = 0;
+        hits[theme] = [];
+        hitKeywords[theme] = [];
+      }
+
+      for (const article of articles) {
+        const t = normalize(article.title);
+        for (const [theme, meta] of Object.entries(THEMES)) {
+          const matched = meta.keywords.find(k => t.includes(k.toLowerCase()));
+          if (matched) {
+            scores[theme] += 1;
+            hits[theme].push(article);
+            hitKeywords[theme].push(matched);
+          }
+        }
+      }
+
+      return { scores, hits, hitKeywords };
+    }
+
+    function buildReason(theme, stock, hitKeywords, articleCount) {
+      const topKeywords = uniq(hitKeywords).slice(0, 5).join(", ") || "관련 키워드";
+      const base =
+        `Yahoo Finance 메인 뉴스에서 '${theme}' 관련 신호가 확인되었습니다. ` +
+        `주요 키워드는 ${topKeywords}이며, 관련 기사 ${articleCount}건을 근거로 ` +
+        `${stock.name}(${stock.ticker}, ${stock.country})를 추천합니다. ${stock.why} ` +
+        `지금 구간에서 우선순위 추천 후보로 제시합니다.`;
+      return base.length > 500 ? base.slice(0, 500) : base;
+    }
+
+    function renderLogos(theme) {
+      const stocks = (THEMES[theme] && THEMES[theme].stocks) || [];
+      logosEl.innerHTML = "";
+      stocks.forEach((s) => {
+        const a = document.createElement("a");
+        a.className = "logo-link";
+        a.href = s.home || "#";
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.title = `${s.name} 공식 홈페이지`;
+
+        const img = document.createElement("img");
+        img.alt = `${s.name} 로고`;
+        img.src = `https://logo.clearbit.com/${encodeURIComponent(s.logoDomain || "")}`;
+        img.loading = "lazy";
+        img.onerror = () => {
+          img.remove();
+          const fb = document.createElement("span");
+          fb.className = "logo-fallback";
+          fb.textContent = s.name;
+          a.appendChild(fb);
+        };
+
+        a.appendChild(img);
+        logosEl.appendChild(a);
+      });
+    }
+
+    function renderResult(theme, stock, reason, links) {
+      themeEl.textContent = `테마: ${theme}`;
+      stockEl.textContent = `추천 종목: ${stock.name} (${stock.ticker}, ${stock.country})`;
+      reasonEl.textContent = `추천 사유(500자 이내): ${reason}`;
+      renderLogos(theme);
+      linksEl.innerHTML = "";
+      links.forEach((a) => {
+        const li = document.createElement("li");
+        const anchor = document.createElement("a");
+        anchor.href = a.url;
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+        anchor.textContent = a.title || a.url;
+        li.appendChild(anchor);
+        linksEl.appendChild(li);
+      });
+      resultEl.style.display = "block";
+    }
+
+    async function run() {
+      runBtn.disabled = true;
+      resultEl.style.display = "none";
+      setStatus("Yahoo Finance 뉴스 수집 중...");
+      try {
+        const { articles, usedSource } = await fetchMainNewsArticles();
+        if (!articles.length) {
+          throw new Error("메인 뉴스에서 분석 가능한 기사 링크를 찾지 못했습니다.");
+        }
+        setStatus(`기사 ${articles.length}건 수집 완료(${usedSource}). 테마 분석 중...`);
+
+        const { scores, hits, hitKeywords } = scoreThemes(articles);
+        const pickedTheme = chooseTheme(scores);
+        const stock = pickFreshStock(pickedTheme);
+        if (!stock) {
+          throw new Error("추천 가능한 종목 목록이 비어 있습니다.");
+        }
+        const related = ((hits[pickedTheme] || []).length ? hits[pickedTheme] : articles).slice(0, 3);
+        const reason = buildReason(pickedTheme, stock, hitKeywords[pickedTheme] || [], related.length);
+
+        renderResult(pickedTheme, stock, reason, related);
+        rememberStock(stock, pickedTheme);
+        setStatus("추천 완료");
+      } catch (err) {
+        setStatus(`실패: ${err.message}`);
+      } finally {
+        runBtn.disabled = false;
+      }
+    }
+
+    function renderNeonTitle(text) {
+      const neonTitle = document.getElementById("neonTitle");
+      neonTitle.innerHTML = "";
+      [...text].forEach((ch, idx) => {
+        if (ch === " ") {
+          const spacer = document.createElement("span");
+          spacer.className = "neon-space";
+          spacer.textContent = " ";
+          neonTitle.appendChild(spacer);
+          return;
+        }
+        const span = document.createElement("span");
+        span.className = "neon-char";
+        span.textContent = ch;
+        const coolHue = 188 + ((idx * 17 + Math.floor(Math.random() * 18)) % 52);
+        span.style.setProperty("--h", String(coolHue));
+        span.style.setProperty("--d", `${idx * 42}ms`);
+        neonTitle.appendChild(span);
+      });
+    }
+
+    renderNeonTitle("내 지갑을 풍족하게, 공무원 주식 추천");
+    runBtn.addEventListener("click", run);
+  </script>
+</body>
+</html>
